@@ -1,5 +1,6 @@
 import { close, init } from "./databases/Mongo/index.js";
 
+import binanceClient from "./services/binance/index.js";
 import express from 'express';
 
 const app = express()
@@ -12,8 +13,34 @@ const port = PORT || 3000;
     // app.use("/trades") // this is how the routes should be connected to the app
     // due to the limited time, i would use "brute-force"-like approach and refactor the code if the time will left at the end
     app.get('/', async function (req, res, next) {
-        res.send('Hello World');
+        try {
+            // Get account information
+            const accountDataResponse = await binanceClient.account();
+
+            binanceClient.logger.log(accountDataResponse.data);
+
+            res.send(accountDataResponse.data);
+        } catch (error) {
+            binanceClient.logger.error(error);
+            next(new Error("Binance API error, can't get user account info"))
+        }
+
     })
+    app.post('/order', async function (req, res, next) {
+        try {
+            // Place a new order
+            binanceClient.newOrder('BNBUSDT', 'BUY', 'LIMIT', {
+                price: '350',
+                quantity: 1,
+                timeInForce: 'GTC'
+            });
+
+            binanceClient.logger.log(response.data);
+        } catch (error) {
+            binanceClient.logger.error(error);
+            next(new Error("Binance API error, can't post an order"))
+        }
+    });
 
     // opening connection to the MongoDB cluster
     await init();

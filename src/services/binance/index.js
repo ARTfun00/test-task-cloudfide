@@ -10,26 +10,4 @@ const { BINANCE_API_KEY: apiKey,
 // TODO: to setup and connect proxy
 const client = new Spot(apiKey, apiSecret, { baseUrl });
 
-try {
-    // Get account information
-    const accountDataResponse = await client.account();
-
-    client.logger.log(accountDataResponse.data);
-} catch (error) {
-    client.logger.error(error);
-}
-
-try {
-    // Place a new order
-    client.newOrder('BNBUSDT', 'BUY', 'LIMIT', {
-        price: '350',
-        quantity: 1,
-        timeInForce: 'GTC'
-    });
-
-    client.logger.log(response.data);
-} catch (error) {
-    client.logger.error(error);
-}
-
-
+export default client;
