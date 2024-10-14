@@ -1,3 +1,4 @@
+# Task description Raw
 Time limit – 120 minutes 
 Allowed tools: almost all 
 Not allowed tools: AI Code Generators 
@@ -41,3 +42,4 @@ Include a README file with instructions on how to set up and run the application
 
 # Trading bot
 The default port of the app is 3000
+Available endpoint: /historical

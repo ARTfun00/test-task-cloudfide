@@ -2,6 +2,7 @@ import { close, init } from "./databases/Mongo/index.js";
 
 import binanceClient from "./services/binance/index.js";
 import express from 'express';
+import processData from './helpers/data-processing.js'
 
 const app = express()
 const { PORT } = process.env
@@ -12,30 +13,23 @@ const port = PORT || 3000;
 (async function () {
     // app.use("/trades") // this is how the routes should be connected to the app
     // due to the limited time, i would use "brute-force"-like approach and refactor the code if the time will left at the end
-    app.get('/', async function (req, res, next) {
+    app.get('/historical', async function (req, res, next) {
         try {
-            // Get account information
-            const accountDataResponse = await binanceClient.account();
+            // this could be fetched from DB in the future
+            // or be configurable depending on business-logic
+            const symbol = "BNBUSDT";
+            const interval = "1d";
 
-            binanceClient.logger.log(accountDataResponse.data);
+            const klinesResponse = await binanceClient.klines(symbol, interval)
+            const dataRaw = klinesResponse.data
+            binanceClient.logger.log(dataRaw);
 
-            res.send(accountDataResponse.data);
-        } catch (error) {
-            binanceClient.logger.error(error);
-            next(new Error("Binance API error, can't get user account info"))
-        }
+            // save fetched data to DB for future analyzes / processing / caching / request optimizations
 
-    })
-    app.post('/order', async function (req, res, next) {
-        try {
-            // Place a new order
-            binanceClient.newOrder('BNBUSDT', 'BUY', 'LIMIT', {
-                price: '350',
-                quantity: 1,
-                timeInForce: 'GTC'
-            });
+            // in case of processing in place
+            const dataProcessed = processData(dataRaw);
 
-            binanceClient.logger.log(response.data);
+            res.send(dataProcessed);
         } catch (error) {
             binanceClient.logger.error(error);
             next(new Error("Binance API error, can't post an order"))
