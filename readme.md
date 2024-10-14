@@ -37,3 +37,7 @@ Make sure to handle the data processing and analysis logic to identify cryptocur
 Deliverables: 
 Provide the source code for the Node.js application, including the test suite. 
 Include a README file with instructions on how to set up and run the application and the test suite. 
+
+
+# Trading bot
+The default port of the app is 3000

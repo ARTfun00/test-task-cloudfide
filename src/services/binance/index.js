@@ -1,4 +1,4 @@
-const { Spot } = require('@binance/connector')
+import { Spot } from '@binance/connector';
 
 const { BINANCE_API_KEY: apiKey,
     BINANCE_API_SECRET: apiSecret,
